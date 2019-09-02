@@ -80,7 +80,7 @@ output.
 options: global program options
 output_type: the output format to use
 out: pointer to the dynamic output array to which the result is appended. Must
-  be freed after use
+  be initialized to a NULL pointer. The caller is responsible for freeing after use.
 outsize: pointer to the dynamic output array size
 */
 void ZopfliCompress(const ZopfliOptions* options, ZopfliFormat output_type,
