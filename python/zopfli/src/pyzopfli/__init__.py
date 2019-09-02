@@ -1,2 +1,2 @@
-from ._zopfli import compress
+from ._zopfli import compress, ZopfliOptions
 from gzip import decompress
