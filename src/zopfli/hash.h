@@ -26,6 +26,10 @@ The hash for ZopfliFindLongestMatch of lz77.c.
 
 #include "util.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef struct ZopfliHash {
   int* head;  /* Hash value to index of its most recent occurrence. */
   unsigned short* prev;  /* Index to index of prev. occurrence of same hash. */
@@ -69,5 +73,9 @@ correctly.
 */
 void ZopfliWarmupHash(const unsigned char* array, size_t pos, size_t end,
                       ZopfliHash* h);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif  /* ZOPFLI_HASH_H_ */

@@ -31,6 +31,10 @@ compression.
 #include "hash.h"
 #include "zopfli.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /*
 Stores lit/length and dist pairs for LZ77.
 Parameter litlens: Contains the literal symbols or length values.
@@ -138,5 +142,9 @@ dictionary.
 void ZopfliLZ77Greedy(ZopfliBlockState* s, const unsigned char* in,
                       size_t instart, size_t inend,
                       ZopfliLZ77Store* store, ZopfliHash* h);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif  /* ZOPFLI_LZ77_H_ */
