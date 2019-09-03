@@ -1,12 +1,18 @@
+#include "bindings.h"
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
 #include <zopfli.h>
+#include <hash.h>
 #include <string>
 #include <cstdlib>
 #include <exception>
 #include <optional>
+#include <memory>
 
 namespace py = pybind11;
+using namespace zopfli_cpp;
+
+namespace {
 
 py::bytes compress(py::bytes const &data, ZopfliOptions const *options) {
     char *data_ptr;
@@ -68,6 +74,8 @@ ZopfliOptions *create_options_with_defaults(
     return result;
 }
 
+}
+
 PYBIND11_MODULE(_zopfli, m) {
     m.doc() = "Python bindings for the Zopfli compression library";
 
@@ -93,4 +101,16 @@ Returns a `bytes` object containing the compressed data.
         .def_readwrite("num_iterations", &ZopfliOptions::numiterations)
         .def_readwrite("block_splitting", &ZopfliOptions::blocksplitting)
         .def_readwrite("block_splitting_max", &ZopfliOptions::blocksplittingmax);
+
+    auto lz77_module = m.def_submodule("lz77", "Utilities for LZ77 generation and histogram.");
+    register_lz77(lz77_module);
+
+    typedef std::unique_ptr<ZopfliHash, clean_and_delete<ZopfliCleanHash>> ZopfliHashHolder;
+
+    py::class_<ZopfliHash, ZopfliHashHolder>(m, "Hash", "Utility hash map for longest match search.")
+        .def(py::init([]() {
+            auto hash = new ZopfliHash();
+            ZopfliAllocHash(ZOPFLI_WINDOW_SIZE, hash);
+            return ZopfliHashHolder(hash);
+        }));
 }
